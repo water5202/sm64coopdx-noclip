@@ -1,7 +1,7 @@
 - game is very vulnerable
 - No crashes, this may not work if the game updates
 - F9 to exit, U Speeds up and P slows down movement, F8 to toggle, dont close the program via the red x as it does not unpatch
--   o
+     o
 - k l ; to move around
 - **By using this software I do not promise no bans in public servers nor am I responsible**
      
