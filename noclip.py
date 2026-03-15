@@ -17,12 +17,12 @@ except:
 module = pymem.process.module_from_name(pm.process_handle, "sm64coopdx.exe")
 base = module.lpBaseOfDll
 
-Y = base + 0x3525CA8
-X = base + 0x3525CAC
-Z = base + 0x3525CA4
+Y = base + 0x3525CA8 # offset for Y
+X = base + 0x3525CAC # offset for X
+Z = base + 0x3525CA4 # offset for Z
 
 def patch(enable):
-    YController = base + 0x91481
+    YController = base + 0x91481 # patch to remove Y going down if airborne
 
     if enable:
         pm.write_bytes(YController, b"\x90\x90\x90\x90", 4)
