@@ -3,6 +3,7 @@ import pymem.process
 import time
 import sys
 import keyboard
+import atexit
 import math
 
 enabled = False
@@ -70,4 +71,8 @@ while True:
     if keyboard.is_pressed('P'):
         speed -= 0.5
         time.sleep(0.5)
+    
+    if keyboard.is_pressed('F9'):
+        patch(False)
+        sys.exit()
     
