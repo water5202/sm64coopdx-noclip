@@ -3,7 +3,6 @@ import pymem.process
 import time
 import sys
 import keyboard
-import atexit
 import math
 
 enabled = False
@@ -22,6 +21,7 @@ Y = base + 0x3525CA8 # offset for Y
 X = base + 0x3525CAC # offset for X
 Z = base + 0x3525CA4 # offset for Z
 
+print("got offsets")
 def patch(enable):
     YController = base + 0x91481 # patch to remove Y going down if airborne
 
@@ -29,8 +29,17 @@ def patch(enable):
         pm.write_bytes(YController, b"\x90\x90\x90\x90", 4)
     else:
         pm.write_bytes(YController, b"\x0F\x13\x43\x64", 4)
+        
+def patch_health(enable):
+    healthController = base + 0x655E9 
+    if enable:
+        pm.write_bytes(healthController, b"\x90\x90\x90", 3)
+    else:
+        pm.write_bytes(healthController, b"\x53\x0C\x80", 3)
+
 
 patch(False)
+print("patch is ready\npress F8 to toggle noclip\npress U to increase speed\npress P to decrease speed\npress F9 to exit\n\n")
 
 while True:
     if enabled:
@@ -38,13 +47,13 @@ while True:
         y = pm.read_float(Y)
         z = pm.read_float(Z)
         
-        if keyboard.is_pressed('w'):
+        if keyboard.is_pressed('o'):
             z += speed
-        if keyboard.is_pressed('s'):
+        if keyboard.is_pressed('l'):
             z -= speed
-        if keyboard.is_pressed('a'):
+        if keyboard.is_pressed('k'):
             x -= speed
-        if keyboard.is_pressed('d'):
+        if keyboard.is_pressed('Colon'):
             x += speed
         if keyboard.is_pressed('space'):
             y += speed
@@ -59,6 +68,7 @@ while True:
     if keyboard.is_pressed('F8'):
         enabled = not enabled
         patch(enabled)
+        patch_health(enabled)
         if enabled:
             print("noclip enabled")
         else:            print("noclip disabled")
