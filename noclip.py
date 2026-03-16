@@ -1,4 +1,3 @@
-# fyi values hidden because a patch will eventually exist
 import pymem
 import pymem.process
 import time
@@ -18,25 +17,25 @@ except:
 module = pymem.process.module_from_name(pm.process_handle, "sm64coopdx.exe")
 base = module.lpBaseOfDll
 
-Y = base + 0x000000
-X = base + 0x000000
-Z = base + 0x000000
+Y = base + 0x3525CA8 # offset for Y
+X = base + 0x3525CAC # offset for X
+Z = base + 0x3525CA4 # offset for Z
 
 print("got offsets")
 def patch(enable):
-    YController = base + 0x00000
+    YController = base + 0x91481 # patch to remove Y going down if airborne
 
     if enable:
         pm.write_bytes(YController, b"\x90\x90\x90\x90", 4)
     else:
-        pm.write_bytes(YController, b"\x90", 4)
+        pm.write_bytes(YController, b"\x0F\x13\x43\x64", 4)
         
 def patch_health(enable):
     healthController = base + 0x655E9 
     if enable:
         pm.write_bytes(healthController, b"\x90\x90\x90", 3)
     else:
-        pm.write_bytes(healthController, b"\x90", 3)
+        pm.write_bytes(healthController, b"\x53\x0C\x80", 3)
 
 
 patch(False)
@@ -86,4 +85,3 @@ while True:
     if keyboard.is_pressed('F9'):
         patch(False)
         sys.exit()
-    
