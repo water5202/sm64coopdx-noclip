@@ -3,16 +3,18 @@ import pymem.process
 import time
 import sys
 import keyboard
-import math
+import os
 
 enabled = False
 speed = 0.5
 try:
     pm = pymem.Pymem("sm64coopdx.exe")
+    os.system(f'title noclip [PID: {pm.process_id}]')
 except:
-    print("open the process")
+    print("open the process (sm64coopdx.exe) opengl <-- required")
     time.sleep(3)
     sys.exit()
+
 
 module = pymem.process.module_from_name(pm.process_handle, "sm64coopdx.exe")
 base = module.lpBaseOfDll
@@ -21,6 +23,7 @@ Y = base + 0x3525CA8 # offset for Y
 X = base + 0x3525CAC # offset for X
 Z = base + 0x3525CA4 # offset for Z
 health = base + 0x3525C4B
+state = base + 0x3525C68
 
 print("got offsets")
 def patch(enable):
@@ -38,16 +41,21 @@ def patch_health(enable):
     else:
         pm.write_bytes(healthController, b"\x53\x0C\x80", 3)
 
-
 patch(False)
-print("patch is ready\npress F8 to toggle noclip\npress U to increase speed\npress P to decrease speed\npress F9 to exit\n\n")
+print("patches are ready\npress F8 to toggle noclip\npress U to increase speed\npress P to decrease speed\npress F9 to exit\n\n")
 
 while True:
     if enabled:
-        x = pm.read_float(X)
-        y = pm.read_float(Y)
-        z = pm.read_float(Z)
-        
+        x = 0
+        y = 0
+        z = 0
+        if pm:
+            x = pm.read_float(X)
+            y = pm.read_float(Y)
+            z = pm.read_float(Z)
+        else:
+            print("program isnt open")
+            time.sleep(0.5)
         if keyboard.is_pressed('o'):
             z += speed
         if keyboard.is_pressed('l'):
@@ -61,18 +69,24 @@ while True:
         if keyboard.is_pressed('Ctrl'):
             y -= speed
             
-        pm.write_float(X, x)
-        pm.write_float(Y, y)
-        pm.write_float(Z, z) 
-        pm.write_bytes(health, b'\x08', 1)
-
+        if pm:
+            pm.write_float(X, x)
+            pm.write_float(Y, y)
+            pm.write_float(Z, z) 
+            pm.write_bytes(health, b'\x08', 1)
+            pm.write_double(state, 7.20536515304863E-251) # crashes if you go in cannon
+        else:
+            print("program isnt open")
+            time.sleep(0.5)
+            
     if keyboard.is_pressed('F8'):
         enabled = not enabled
         patch(enabled)
         patch_health(enabled)
         if enabled:
             print("noclip enabled")
-        else:            print("noclip disabled")
+        else:
+            print("noclip disabled")
         time.sleep(0.5)
     
     if keyboard.is_pressed('U'):
