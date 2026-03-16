@@ -74,7 +74,7 @@ while True:
             pm.write_float(Y, y)
             pm.write_float(Z, z) 
             pm.write_bytes(health, b'\x08', 1)
-            pm.write_double(state, 7.20536515304863E-251) # crashes if you go in cannon
+            pm.write_double(state, 7.20536515304863E-251) # crashes if you go in cannon and get hurt
         else:
             print("program isnt open")
             time.sleep(0.5)
