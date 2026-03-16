@@ -20,6 +20,7 @@ base = module.lpBaseOfDll
 Y = base + 0x3525CA8 # offset for Y
 X = base + 0x3525CAC # offset for X
 Z = base + 0x3525CA4 # offset for Z
+health = base + 0x3525C4B
 
 print("got offsets")
 def patch(enable):
@@ -63,7 +64,7 @@ while True:
         pm.write_float(X, x)
         pm.write_float(Y, y)
         pm.write_float(Z, z) 
-
+        pm.write_bytes(health, b'\x08', 1)
 
     if keyboard.is_pressed('F8'):
         enabled = not enabled
