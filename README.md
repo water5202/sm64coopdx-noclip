@@ -1,4 +1,4 @@
-- game is very vulnerable
+- yes this is open source feel free to change anything
 - No crashes, this may not work if the game updates
 - F9 to exit, U Speeds up and P slows down movement, F8 to toggle, dont close the program via the red x as it does not unpatch
 - o k l ; to move around
